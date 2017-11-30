@@ -21,4 +21,14 @@
         android:layout_below="@+id/tv_code_text"
         />
 
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/btn_scan"
+        android:layout_below="@+id/btn_scan"
+        android:layout_marginTop="69dp"
+        android:onClick="onClick"
+        android:text="Login" />
+
 </RelativeLayout>
