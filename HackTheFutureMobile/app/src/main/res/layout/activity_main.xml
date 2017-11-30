@@ -14,14 +14,6 @@
         />
 
     <Button
-        android:id="@+id/btn_scan"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Start scan"
-        android:layout_below="@+id/tv_code_text"
-        />
-
-    <Button
         android:id="@+id/button2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -30,5 +22,15 @@
         android:layout_marginTop="69dp"
         android:onClick="onClick"
         android:text="Login" />
+
+    <Button
+        android:id="@+id/mineBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/button2"
+        android:layout_below="@+id/button2"
+        android:layout_marginTop="79dp"
+        android:onClick="onClick"
+        android:text="get mines" />
 
 </RelativeLayout>
