@@ -1,23 +1,22 @@
 package com.example.keiichi.hackthefuturemobile;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
-import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.os.Bundle;
-import android.util.SparseArray;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
-import com.google.android.gms.vision.Frame;
-import com.google.android.gms.vision.barcode.Barcode;
-import com.google.android.gms.vision.barcode.BarcodeDetector;
+import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
-    private Bitmap mybitmap;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
+
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+
+    TextView tvCardText;
+    Button btStartScan;
+
 
 
 
@@ -25,35 +24,45 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Button btn = (Button) findViewById(R.id.button);
-        final TextView textView = findViewById(R.id.txtContent);
-        btn.setOnClickListener(new View.OnClickListener() {
+
+        tvCardText = (TextView)findViewById(R.id.tv_code_text);
+        btStartScan = (Button)findViewById(R.id.btn_scan);
+
+        btStartScan.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                ImageView myImageView = (ImageView) findViewById(R.id.imgview);
-                Bitmap myBitmap = BitmapFactory.decodeResource(
-                        getApplicationContext().getResources(),
-                        R.drawable.puppy);
-                myImageView.setImageBitmap(myBitmap);
-                BarcodeDetector detector =
-                        new BarcodeDetector.Builder(getApplicationContext())
-                                .setBarcodeFormats(Barcode.DATA_MATRIX | Barcode.QR_CODE)
-                                .build();
-                if(!detector.isOperational()){
-                    textView.setText("Could not set up the detector!");
-                    return;
-                }
-
-                Frame frame = new Frame.Builder().setBitmap(myBitmap).build();
-                SparseArray<Barcode> barcodes = detector.detect(frame);
-                Barcode thisCode = barcodes.valueAt(0);
-                TextView txtView = (TextView) findViewById(R.id.txtContent);
-                txtView.setText(thisCode.rawValue);
+            public void onClick(View view) {
+                startQRScanner();
             }
-
         });
-
     }
 
 
+    private void startQRScanner() {
+        new IntentIntegrator(this).initiateScan();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        IntentResult result =   IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+
+        if (result != null) {
+            if (result.getContents() == null) {
+                Toast.makeText(this,    "Cancelled",Toast.LENGTH_LONG).show();
+            } else {
+                updateText(result.getContents());
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    private void updateText(String scanCode) {
+        tvCardText.setText(scanCode);
+    }
+
+    @Override
+    public void onClick(View view) {
+        startQRScanner();
+    }
 }
